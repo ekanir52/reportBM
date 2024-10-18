@@ -1,5 +1,6 @@
-from utils import build_jwt_client, fetch_all_pages_in_parallel, fetch_page, process_contacts_data, create_html_table, send_email, delta_df_now
+from utils import build_jwt_client, fetch_all_pages_in_parallel, fetch_page, process_contacts_data, create_html_table, send_email, delta_df_now, evolution
 import math
+import time
 
 
 def main():
@@ -35,14 +36,16 @@ def main():
                     manager_state_count[managers[manager]] = {"p": 0, "pq": 0, "cl": 0, "pdo": 0}
 
                 table_DF = process_contacts_data(managers, manager_state_count, all_contacts_data)
-
-                DF_delta = delta_df_now(table_DF)
-                subject, body = create_html_table(table_DF, DF_delta)
+                print("Evolution")
                 
+                print("Delta")
+                DF_delta = delta_df_now(table_DF)
+                time.sleep(5)
+                evolution()
+                subject, body = create_html_table(table_DF, DF_delta)
                 send_email(subject, body)
     except Exception as e:
         print(f"An error has occurred:\n {e}")
-
 
 if __name__ == "__main__":
     main()
